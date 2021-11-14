@@ -20,8 +20,8 @@ node{
     
     
     stage('Build Docker Image'){
-        sh 'docker rmi -f pkw0301/spring-boot-mongo'
-        sh 'docker build -t pkw0301/spring-boot-mongo .'
+        sh 'docker rmi -f pri746d/spring-boot-mongo'
+        sh 'docker build -t pri746d/spring-boot-mongo .'
     }
     
 
@@ -46,13 +46,13 @@ node{
     
     stage {'push docker image to ACr/Dcokerhub'}
     { steps { // This step should not normally be used in your script. Consult the inline help for details.
-withDockerRegistry(credentialsId: 'DOCKERHUB', url: 'https://index.docker.io/v1/') {
-   sh 'docker push pkw0301/spring-boot-mongo'
+withDockerRegistry(credentialsId: 'DockerHubCredentialsNew', url: 'https://index.docker.io/v1/') {
+   sh 'docker push pri746d/spring-boot-mongo'
 } }}
      
      
      stage("Deploy To Kuberates Cluster"){
-  kubernetesDeploy configs: 'springBootMongo.yml', kubeConfig: [path: ''], kubeconfigId: 'kubeconfig', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']
+  kubernetesDeploy configs: 'springBootMongo.yml', kubeConfig: [path: ''], kubeconfigId: 'KUBERNETES-CONFIG', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']
      }
 	 
     
